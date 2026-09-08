@@ -1,0 +1,42 @@
+name: Update UCL standings
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-standings
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Fetch standings
+        env:
+          FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
+        run: python scripts/fetch_standings.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "standings-bot"
+          git config user.email "actions@github.com"
+          git add standings.json
+          if git diff --cached --quiet; then
+            echo "No change in standings.json — nothing to commit."
+          else
+            git commit -m "Update standings ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+            git push
+          fi
