@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dowaniyat AlMusaileet — UCL 2026/27 Points Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0F2033; --panel:#16304A; --panel2:#12283F; --row:#1B3A58; --row-hi:#23496C;
+  --line:rgba(240,231,214,.14); --line-soft:rgba(240,231,214,.08);
+  --sand:#F0E7D6; --sand-dim:#A9B9C8;
+  --brass:#E0B64A; --steel:#6F9DC0; --clay:#CE6E6E; --green:#6FBF8E;
+  --radius:12px;
+  --fs-latin:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --fs-arabic:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;
+  --font:var(--fs-latin);
+}
+html[dir="rtl"]{--font:var(--fs-arabic);}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--night);
+  background-image:radial-gradient(120% 80% at 50% -20%, #1C3E5F 0%, #0F2033 62%);
+  background-attachment:fixed;
+  color:var(--sand); font-family:var(--font); font-size:16px; line-height:1.5;
+  -webkit-text-size-adjust:100%;
+}
+.num{font-family:var(--fs-latin);font-variant-numeric:tabular-nums;}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px 80px;}
+a{color:inherit;}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 0 10px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;
+  background:linear-gradient(to bottom,#0F2033 78%,rgba(15,32,51,0));backdrop-filter:blur(6px);}
+.mark{display:flex;align-items:center;gap:10px;min-width:0;cursor:pointer;background:none;border:0;padding:0;color:inherit;font-family:inherit;}
+.mark .badge{width:28px;flex:none;}
+.mark b{font-weight:700;font-size:.9rem;color:var(--sand);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mark small{display:block;font-weight:500;font-size:.7rem;color:var(--sand-dim);}
+.langbtn{flex:none;border:1px solid var(--brass);background:transparent;color:var(--brass);
+  font-family:inherit;font-size:.82rem;font-weight:600;padding:8px 15px;border-radius:99px;cursor:pointer;}
+.langbtn:hover{background:rgba(224,182,74,.12);}
+
+/* hero / meta */
+.hero{padding:26px 0 8px;}
+.season{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.12em;
+  color:var(--brass);border:1px solid rgba(224,182,74,.42);padding:5px 11px;border-radius:99px;margin-bottom:14px;}
+html[dir="rtl"] .season{letter-spacing:normal;}
+h1{font-size:clamp(1.55rem,5vw,2.2rem);line-height:1.14;margin:0 0 6px;font-weight:800;letter-spacing:-.015em;}
+html[dir="rtl"] h1{letter-spacing:0;line-height:1.35;}
+.sub{margin:0;color:var(--sand-dim);max-width:70ch;font-size:.95rem;}
+.metabar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:18px;
+  padding:12px 15px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel2);}
+.metabar .item{display:flex;flex-direction:column;gap:1px;}
+.metabar .k{font-size:.68rem;color:var(--sand-dim);text-transform:uppercase;letter-spacing:.08em;}
+html[dir="rtl"] .metabar .k{letter-spacing:normal;}
+.metabar .v{font-size:.9rem;font-weight:600;}
+.metabar .v.warn{color:var(--brass);}
+.metabar .spacer{flex:1 1 auto;}
+.refresh{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--sand);
+  font-family:inherit;font-size:.82rem;font-weight:600;padding:8px 14px;border-radius:99px;cursor:pointer;display:flex;align-items:center;gap:7px;}
+.refresh:hover{border-color:var(--sand-dim);}
+.refresh:disabled{opacity:.5;cursor:default;}
+
+/* layout */
+.grid{display:grid;grid-template-columns:1fr;gap:20px;margin-top:24px;}
+@media(min-width:860px){.grid{grid-template-columns:1.05fr .95fr;align-items:start;}}
+.card{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);overflow:hidden;}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 16px 13px;border-bottom:1px solid var(--line-soft);}
+.card-h h2{margin:0;font-size:1.02rem;font-weight:700;}
+.card-h .note{font-size:.74rem;color:var(--sand-dim);}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:.9rem;}
+thead th{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--sand-dim);
+  font-weight:600;text-align:start;padding:9px 10px;border-bottom:1px solid var(--line-soft);white-space:nowrap;}
+html[dir="rtl"] thead th{letter-spacing:normal;}
+tbody td{padding:9px 10px;border-bottom:1px solid var(--line-soft);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:0;}
+th.right,td.right{text-align:end;}
+th.mid,td.mid{text-align:center;}
+tr.clickable{cursor:pointer;}
+tr.clickable:hover{background:var(--row-hi);}
+.rankcell{font-weight:800;color:var(--sand-dim);width:34px;text-align:center;}
+tr.p1 .rankcell{color:var(--brass);}
+.leader-row.p1{background:linear-gradient(90deg,rgba(224,182,74,.14),transparent);}
+.pill{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:99px;}
+.pill.gold{background:rgba(224,182,74,.18);color:var(--brass);}
+
+/* team cell */
+.teamcell{display:flex;align-items:center;gap:10px;min-width:0;}
+.crest{width:28px;height:28px;flex:none;display:block;}
+.crest svg,.crest img{display:block;width:100%;height:100%;object-fit:contain;}
+.tn{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tsub{display:block;font-size:.7rem;color:var(--sand-dim);margin-top:1px;}
+.zone{width:4px;border-radius:2px;height:26px;flex:none;background:var(--steel);}
+.zone.z1{background:var(--brass);} .zone.z2{background:var(--steel);} .zone.z3{background:var(--clay);}
+
+/* points colouring */
+.pts{font-weight:800;}
+.pts.good{color:var(--green);} .pts.bad{color:var(--clay);} .pts.zero{color:var(--sand-dim);}
+.delta{font-weight:700;}
+.up{color:var(--green);} .down{color:var(--clay);} .flat{color:var(--sand-dim);}
+
+/* detail views */
+.detail-head{display:flex;align-items:center;gap:14px;margin:22px 0 6px;}
+.backbtn{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--sand);
+  font-family:inherit;font-size:.85rem;font-weight:600;padding:9px 14px;border-radius:99px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;}
+.backbtn:hover{border-color:var(--sand-dim);}
+.backbtn .ar-flip{display:inline-block;}
+html[dir="rtl"] .backbtn .ar-flip{transform:scaleX(-1);}
+.detail-title{display:flex;align-items:center;gap:14px;min-width:0;}
+.detail-title .crest{width:46px;height:46px;}
+.detail-title h1{margin:0;font-size:clamp(1.3rem,4.6vw,1.9rem);}
+.detail-title .dsub{color:var(--sand-dim);font-size:.85rem;margin-top:2px;}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:18px 0 8px;}
+.tile{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel2);padding:14px 15px;}
+.tile .k{font-size:.7rem;color:var(--sand-dim);text-transform:uppercase;letter-spacing:.07em;}
+html[dir="rtl"] .tile .k{letter-spacing:normal;}
+.tile .v{font-size:1.7rem;font-weight:800;margin-top:5px;line-height:1;}
+.tile .h{font-size:.72rem;color:var(--sand-dim);margin-top:6px;}
+.tile.accent{border-color:rgba(224,182,74,.5);background:rgba(224,182,74,.08);}
+.tile.accent .v{color:var(--brass);}
+
+.sorthint{font-size:.74rem;color:var(--sand-dim);margin:16px 0 8px;}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;padding:12px 16px;font-size:.76rem;color:var(--sand-dim);border-top:1px solid var(--line-soft);}
+.legend span{display:flex;align-items:center;gap:7px;}
+.sw{width:10px;height:10px;border-radius:3px;flex:none;}
+.sw1{background:var(--brass);} .sw2{background:var(--steel);} .sw3{background:var(--clay);}
+
+.hidden{display:none!important;}
+footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:.74rem;color:#6B8199;}
+.banner{margin:18px 0 0;border:1px solid rgba(224,182,74,.45);background:rgba(224,182,74,.09);
+  border-radius:var(--radius);padding:11px 15px;font-size:.84rem;color:#F2D89A;}
+@media (max-width:520px){
+  .metabar{gap:10px 14px;}
+  .tiles{grid-template-columns:repeat(2,1fr);}
+  thead th,tbody td{padding:8px 7px;}
+  .tsub{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <button class="mark" id="homeBtn" type="button" aria-label="home">
+      <svg class="badge" viewBox="0 0 120 136" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M18 8 H102 A10 10 0 0 1 112 18 V76 C112 103 89 119 60 128 C31 119 8 103 8 76 V18 A10 10 0 0 1 18 8 Z" fill="#0B1826" stroke="#E0B64A" stroke-width="5.5"/>
+        <rect x="24" y="36" width="72" height="12" rx="3" fill="#E0B64A"/>
+        <rect x="34" y="58" width="52" height="12" rx="3" fill="#6F9DC0"/>
+        <rect x="44" y="80" width="32" height="12" rx="3" fill="#3E6180"/>
+      </svg>
+      <span><b id="markText">Dowaniyat AlMusaileet</b><small id="markSub">Points Tracker</small></span>
+    </button>
+    <button class="langbtn" id="langBtn" type="button">العربية</button>
+  </div>
+
+  <!-- ============ HOME ============ -->
+  <section id="view-home">
+    <header class="hero">
+      <div class="season" id="season">UEFA Champions League 2026/27 · League Phase</div>
+      <h1 id="title">Points Tracker</h1>
+      <p class="sub" id="lede"></p>
+
+      <div class="metabar">
+        <div class="item"><span class="k" id="mkUpdated">Last updated</span><span class="v" id="mvUpdated">—</span></div>
+        <div class="item"><span class="k" id="mkMd">Matchday</span><span class="v" id="mvMd">—</span></div>
+        <div class="item"><span class="k" id="mkSrc">Source</span><span class="v" id="mvSrc">—</span></div>
+        <div class="spacer"></div>
+        <button class="refresh" id="refreshBtn" type="button"><span id="refreshTxt">Refresh</span></button>
+      </div>
+      <div class="banner" id="provisionalBanner"></div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-h">
+          <h2 id="hPlayers">Player standings</h2>
+          <span class="note" id="hPlayersNote">Lowest points wins</span>
+        </div>
+        <table>
+          <thead><tr>
+            <th class="mid" id="thPos">#</th>
+            <th id="thPlayer">Player</th>
+            <th class="right" id="thBase">Diff</th>
+            <th class="right" id="thBonus">Bonus</th>
+            <th class="right" id="thTotal">Total</th>
+          </tr></thead>
+          <tbody id="playersBody"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <h2 id="hTeams">Actual standings</h2>
+          <span class="note" id="hTeamsNote">Live from source</span>
+        </div>
+        <table>
+          <thead><tr>
+            <th class="mid" id="thRank">#</th>
+            <th id="thTeam">Team</th>
+            <th class="mid" id="thP">P</th>
+            <th class="mid" id="thPts">Pts</th>
+            <th class="mid" id="thGd">GD</th>
+          </tr></thead>
+          <tbody id="teamsBody"></tbody>
+        </table>
+        <div class="legend">
+          <span><i class="sw sw1"></i><em id="lg1">1–8 · round of 16</em></span>
+          <span><i class="sw sw2"></i><em id="lg2">9–24 · play-offs</em></span>
+          <span><i class="sw sw3"></i><em id="lg3">25–36 · out</em></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PLAYER DETAIL ============ -->
+  <section id="view-player" class="hidden">
+    <div class="detail-head">
+      <button class="backbtn" data-back type="button"><span class="ar-flip">←</span> <span class="backtxt">Back</span></button>
+    </div>
+    <div class="detail-title">
+      <div>
+        <h1 id="pdName"></h1>
+        <div class="dsub" id="pdSub"></div>
+      </div>
+    </div>
+    <div class="tiles" id="pdTiles"></div>
+    <p class="sorthint" id="pdHint"></p>
+    <div class="card">
+      <table>
+        <thead><tr>
+          <th class="mid" id="pdTPred">Pred</th>
+          <th id="pdTTeam">Team</th>
+          <th class="mid" id="pdTAct">Actual</th>
+          <th class="right" id="pdTDiff">Diff</th>
+          <th class="right" id="pdTBonus">Bonus</th>
+          <th class="right" id="pdTNet">Net</th>
+        </tr></thead>
+        <tbody id="pdBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ TEAM DETAIL ============ -->
+  <section id="view-team" class="hidden">
+    <div class="detail-head">
+      <button class="backbtn" data-back type="button"><span class="ar-flip">←</span> <span class="backtxt">Back</span></button>
+    </div>
+    <div class="detail-title">
+      <span class="crest" id="tdCrest"></span>
+      <div>
+        <h1 id="tdName"></h1>
+        <div class="dsub" id="tdSub"></div>
+      </div>
+    </div>
+    <div class="tiles" id="tdTiles"></div>
+    <p class="sorthint" id="tdHint"></p>
+    <div class="card">
+      <table>
+        <thead><tr>
+          <th id="tdTPlayer">Player</th>
+          <th class="mid" id="tdTPred">Predicted</th>
+          <th class="mid" id="tdTAct">Actual</th>
+          <th class="right" id="tdTDiff">Diff</th>
+          <th class="right" id="tdTBonus">Bonus</th>
+          <th class="right" id="tdTNet">Net</th>
+        </tr></thead>
+        <tbody id="tdBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+"use strict";
+
+/* ================= injected data ================= */
+var TEAMS = /*__TEAMS__*/;
+var PRED = /*__PRED__*/;
+var SEED_STANDINGS = /*__STANDINGS__*/;
+
+/* ================= scoring config ================= */
+/* Bonus stacking (cumulative): a team correctly in the top 8 earns BOTH the
+   top-8 (-2) and the top-24 (-1) bonus.  Lowest total wins. */
+var BONUS_TOP8 = -2, BONUS_TOP24 = -1;
+
+/* ================= helpers ================= */
+function $(id){ return document.getElementById(id); }
+var byId = {}, byName = {};
+TEAMS.forEach(function(t){ byId[t.id] = t; byName[t.en] = t; });
+
+/* loose team-name matcher (so a live API's variant names still resolve) */
+function norm(s){
+  return (s||"").toString().toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/&/g," and ")
+    .replace(/[^a-z0-9]+/g," ")
+    .replace(/\b(fc|cf|ac|sc|bk|kv|sk|as|ss|ssc|afc|cp|de|club|football|calcio|balompie|eindhoven|donetsk|praha|prague|munchen|munich|bratislava|glimt|athens|madrid|milan)\b/g," ")
+    .replace(/\s+/g," ").trim();
+}
+var ALIAS = {};
+TEAMS.forEach(function(t){ ALIAS[norm(t.en)] = t.id; });
+/* explicit variants seen from common APIs */
+[["paris saint germain","psg"],["paris sg","psg"],["bayern","bay"],["fc bayern","bay"],
+ ["real","rma"],["inter","int"],["internazionale","int"],["man city","mci"],["manchester city","mci"],
+ ["arsenal","ars"],["barcelona","bar"],["barca","bar"],["atletico","atm"],["atletico de madrid","atm"],
+ ["borussia dortmund","bvb"],["dortmund","bvb"],["roma","rom"],["as roma","rom"],
+ ["sporting","scp"],["sporting cp","scp"],["sporting lisbon","scp"],["aston villa","avl"],["villa","avl"],
+ ["porto","por"],["man united","mun"],["manchester united","mun"],["brugge","bru"],["club brugge","bru"],
+ ["betis","bet"],["real betis","bet"],["psv","psv"],["feyenoord","fey"],["lille","lil"],["losc","lil"],
+ ["napoli","nap"],["rb leipzig","rbl"],["leipzig","rbl"],["villarreal","vil"],["shakhtar","shk"],
+ ["galatasaray","gal"],["fenerbahce","fen"],["bodo","bod"],["bodo glimt","bod"],["viking","vik"],
+ ["slavia","sla"],["slavia praha","sla"],["stuttgart","vfb"],["vfb stuttgart","vfb"],["aek","aek"],
+ ["aek athens","aek"],["lask","lsk"],["como","com"],["lens","len"],["rc lens","len"],["sabah","sab"],
+ ["slovan","slo"],["slovan bratislava","slo"]
+].forEach(function(p){ ALIAS[norm(p[0])] = p[1]; });
+
+function resolveTeamId(name){
+  if(byName[name]) return byName[name].id;
+  var n = norm(name);
+  if(ALIAS[n]) return ALIAS[n];
+  /* substring fallback */
+  for(var k in ALIAS){ if(k && (n.indexOf(k)>=0 || k.indexOf(n)>=0)) return ALIAS[k]; }
+  return null;
+}
+
+/* ================= state ================= */
+var lang = "en";
+var STAND = SEED_STANDINGS;      /* current standings object */
+var actualRank = {};             /* teamId -> actual rank (1..36) */
+var results = [];                /* computed per-player results */
+
+/* ================= i18n ================= */
+var T = {
+ en:{
+  markSub:"Points Tracker",
+  season:"UEFA Champions League 2026/27 · League Phase",
+  title:"Points Tracker",
+  lede:"Lower is better. Each player scores the gap between where they placed every team and where that team actually sits, minus bonuses for correct top-8 and top-24 calls. The player with the fewest points wins.",
+  updated:"Last updated", md:"Matchday", src:"Source", refresh:"Refresh", refreshing:"Refreshing…",
+  hPlayers:"Player standings", hPlayersNote:"Lowest points wins",
+  pos:"#", player:"Player", base:"Diff", bonus:"Bonus", total:"Total",
+  hTeams:"Actual standings", hTeamsNote:"From source",
+  rank:"#", team:"Team", P:"P", Pts:"Pts", GD:"GD",
+  lg1:"1–8 · round of 16", lg2:"9–24 · play-offs", lg3:"25–36 · out",
+  back:"Back",
+  filledIn:"Prediction filed", code:"Code",
+  tTotal:"Total points", tBase:"Position diff", tBonus:"Bonus", tRankAmong:"Rank",
+  tTop8:"Top-8 hits", tTop24:"Top-24 hits",
+  ptsWord:"pts", of:"of",
+  pdHint:"Every team this player predicted, worst rows first. Diff = |predicted − actual|. Bonus stacks: −2 for a correct top-8 call, −1 for a correct top-24 call.",
+  pdTPred:"Pred", pdTTeam:"Team", pdTAct:"Actual", pdTDiff:"Diff", pdTBonus:"Bonus", pdTNet:"Net",
+  tdActRank:"Actual rank", tdPlayed:"Played", tdPts:"Points", tdAvg:"Avg net given",
+  tdHint:"What this team did to each player's score, worst first. Net = diff + any bonus that team earned them.",
+  tdTPlayer:"Player", tdTPred:"Predicted", tdTAct:"Actual", tdTDiff:"Diff", tdTBonus:"Bonus", tdTNet:"Net",
+  provisional:"Provisional data — no matches played yet. Points shown compare predictions against the draw order and will become meaningful once matchday results are in.",
+  offlineNote:"Showing built-in data (could not load standings.json).",
+  lang:"العربية",
+  foot:"Private competition for the Dowaniyat AlMusaileet group · UEFA Champions League 2026/27 league phase.",
+  notPlayed:"—"
+ },
+ ar:{
+  markSub:"متتبّع النقاط",
+  season:"دوري أبطال أوروبا ٢٠٢٦/٢٧ · دور الدوري",
+  title:"متتبّع النقاط",
+  lede:"الأقل نقاطاً هو الأفضل. يحصل كل لاعب على نقاط تساوي الفرق بين ترتيبه المتوقّع لكل فريق وترتيبه الفعلي، ناقص مكافآت التوقّع الصحيح لأفضل ٨ وأفضل ٢٤. صاحب أقل مجموع نقاط يفوز.",
+  updated:"آخر تحديث", md:"الجولة", src:"المصدر", refresh:"تحديث", refreshing:"جارٍ التحديث…",
+  hPlayers:"ترتيب اللاعبين", hPlayersNote:"الأقل نقاطاً يفوز",
+  pos:"#", player:"اللاعب", base:"الفرق", bonus:"المكافأة", total:"المجموع",
+  hTeams:"الترتيب الفعلي", hTeamsNote:"من المصدر",
+  rank:"#", team:"الفريق", P:"لعب", Pts:"نقاط", GD:"الفارق",
+  lg1:"١–٨ · دور الـ١٦", lg2:"٩–٢٤ · الملحق", lg3:"٢٥–٣٦ · خارج",
+  back:"رجوع",
+  filledIn:"تاريخ التوقّع", code:"الرمز",
+  tTotal:"مجموع النقاط", tBase:"فرق المراكز", tBonus:"المكافآت", tRankAmong:"الترتيب",
+  tTop8:"إصابات أفضل ٨", tTop24:"إصابات أفضل ٢٤",
+  ptsWord:"نقطة", of:"من",
+  pdHint:"كل فريق توقّعه هذا اللاعب، الأسوأ أولاً. الفرق = |المتوقّع − الفعلي|. المكافآت تتراكم: −٢ لتوقّع صحيح ضمن أفضل ٨، و−١ لتوقّع صحيح ضمن أفضل ٢٤.",
+  pdTPred:"المتوقّع", pdTTeam:"الفريق", pdTAct:"الفعلي", pdTDiff:"الفرق", pdTBonus:"المكافأة", pdTNet:"الصافي",
+  tdActRank:"الترتيب الفعلي", tdPlayed:"لعب", tdPts:"النقاط", tdAvg:"متوسط الصافي",
+  tdHint:"ما فعله هذا الفريق بنقاط كل لاعب، الأسوأ أولاً. الصافي = الفرق + أي مكافأة منحها هذا الفريق.",
+  tdTPlayer:"اللاعب", tdTPred:"المتوقّع", tdTAct:"الفعلي", tdTDiff:"الفرق", tdTBonus:"المكافأة", tdTNet:"الصافي",
+  provisional:"بيانات مبدئية — لم تُلعب أي مباريات بعد. النقاط الظاهرة تقارن التوقّعات بترتيب القرعة وستصبح ذات معنى بعد نتائج الجولات.",
+  offlineNote:"يتم عرض البيانات المدمجة (تعذّر تحميل standings.json).",
+  lang:"English",
+  foot:"مسابقة خاصة بمجموعة ديوانية المسيليت · دور الدوري لأبطال أوروبا ٢٠٢٦/٢٧.",
+  notPlayed:"—"
+ }
+};
+function L(){ return T[lang]; }
+
+/* ================= badge / crest ================= */
+var SHIELD = "M32 3 L61 11 V36 C61 52 47 61 32 65 C17 61 3 52 3 36 V11 Z";
+function badge(t){
+  var cid = "c_"+t.id, inner;
+  if(t.pat==="solid"){ inner='<rect width="64" height="68" fill="'+t.c1+'"/>'; }
+  else if(t.pat==="halves"){ inner='<rect width="32" height="68" fill="'+t.c1+'"/><rect x="32" width="32" height="68" fill="'+t.c2+'"/>'; }
+  else if(t.pat==="stripes"){ inner='<rect width="64" height="68" fill="'+t.c1+'"/><rect x="9" width="9" height="68" fill="'+t.c2+'"/><rect x="28" width="9" height="68" fill="'+t.c2+'"/><rect x="47" width="9" height="68" fill="'+t.c2+'"/>'; }
+  else if(t.pat==="hoop"){ inner='<rect width="64" height="68" fill="'+t.c1+'"/><rect y="25" width="64" height="17" fill="'+t.c2+'"/>'; }
+  else { inner='<rect width="64" height="68" fill="'+t.c1+'"/><rect x="25" width="14" height="68" fill="'+t.c2+'"/>'; }
+  return '<svg viewBox="0 0 64 68" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+    +'<defs><clipPath id="'+cid+'"><path d="'+SHIELD+'"/></clipPath></defs>'
+    +'<g clip-path="url(#'+cid+')">'+inner+'</g>'
+    +'<path d="'+SHIELD+'" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2"/>'
+    +'<text x="32" y="41" text-anchor="middle" font-family="Archivo, sans-serif" font-size="17" font-weight="800" fill="'+t.tc+'" stroke="rgba(0,0,0,.55)" stroke-width="3.2" paint-order="stroke" style="direction:ltr">'+t.ab+'</text>'
+    +'</svg>';
+}
+function teamName(t){ return lang==="ar" ? t.ar : t.en; }
+function teamCountry(t){ return lang==="ar" ? t.cAr : t.cEn; }
+
+/* ================= scoring ================= */
+function buildActualRank(){
+  actualRank = {};
+  var rows = (STAND.standings||[]).slice().sort(function(a,b){ return a.rank-b.rank; });
+  rows.forEach(function(r){
+    var id = resolveTeamId(r.team);
+    if(id) actualRank[id] = r.rank;
+  });
+}
+function teamStat(id){
+  var rows = STAND.standings||[];
+  for(var i=0;i<rows.length;i++){ if(resolveTeamId(rows[i].team)===id) return rows[i]; }
+  return null;
+}
+function scorePlayer(p){
+  var lines = [], base=0, bonus=0, top8=0, top24=0;
+  p.ranking.forEach(function(name, idx){
+    var t = byName[name]; if(!t) return;
+    var pred = idx+1;
+    var act = actualRank[t.id];
+    if(act==null){ lines.push({team:t, pred:pred, act:null, diff:0, b:0, net:0, played:false}); return; }
+    var diff = Math.abs(pred-act);
+    var b=0;
+    if(pred<=8 && act<=8){ b+=BONUS_TOP8; top8++; }
+    if(pred<=24 && act<=24){ b+=BONUS_TOP24; top24++; }
+    base+=diff; bonus+=b;
+    lines.push({team:t, pred:pred, act:act, diff:diff, b:b, net:diff+b, played:true});
+  });
+  return {player:p, base:base, bonus:bonus, total:base+bonus, top8:top8, top24:top24, lines:lines};
+}
+function computeAll(){
+  buildActualRank();
+  results = PRED.players.map(scorePlayer);
+  results.sort(function(a,b){ return a.total-b.total || a.base-b.base || a.player.name.localeCompare(b.player.name); });
+  results.forEach(function(r,i){ r.pos=i+1; });
+}
+function resultByName(name){ for(var i=0;i<results.length;i++){ if(results[i].player.name===name) return results[i]; } return null; }
+
+/* ================= formatting ================= */
+function sgn(n){ return n>0 ? "+"+n : String(n); }
+function ptsClass(n){ return n<0?"good":(n>0?"bad":"zero"); }
+function anyPlayed(){ return (STAND.standings||[]).some(function(r){ return (r.played||0)>0; }); }
+
+/* ================= render: home ================= */
+function renderMeta(){
+  var l=L();
+  var d = STAND.last_updated ? new Date(STAND.last_updated) : null;
+  var when = "—";
+  if(d && !isNaN(d)){
+    when = d.toLocaleString(lang==="ar"?"ar":"en-GB",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  }
+  $("mvUpdated").textContent = when;
+  $("mvMd").textContent = (STAND.matchday!=null? STAND.matchday : "—") + " / 8";
+  $("mvSrc").textContent = STAND.source || "—";
+  var banner = $("provisionalBanner");
+  if(!anyPlayed()){ banner.textContent = l.provisional; banner.style.display="block"; }
+  else { banner.style.display="none"; }
+}
+function renderPlayers(){
+  var tb=$("playersBody"); tb.innerHTML="";
+  results.forEach(function(r){
+    var tr=document.createElement("tr");
+    tr.className="clickable leader-row"+(r.pos===1?" p1":"");
+    var winnerPill = r.pos===1 ? ' <span class="pill gold">1</span>' : '';
+    tr.innerHTML =
+      '<td class="rankcell num">'+r.pos+'</td>'
+     +'<td><b>'+escapeHtml(r.player.name)+'</b></td>'
+     +'<td class="right num">'+r.base+'</td>'
+     +'<td class="right num pts '+ptsClass(r.bonus)+'">'+(r.bonus?sgn(r.bonus):"0")+'</td>'
+     +'<td class="right num pts"><b>'+r.total+'</b></td>';
+    tr.addEventListener("click", function(){ go("player", r.player.name); });
+    tb.appendChild(tr);
+  });
+}
+function zoneClass(rank){ return rank<=8?"z1":(rank<=24?"z2":"z3"); }
+function renderTeams(){
+  var tb=$("teamsBody"); tb.innerHTML="";
+  var rows=(STAND.standings||[]).slice().sort(function(a,b){return a.rank-b.rank;});
+  rows.forEach(function(r){
+    var id=resolveTeamId(r.team); var t=id?byId[id]:null; if(!t) return;
+    var tr=document.createElement("tr"); tr.className="clickable";
+    var gd = (r.gd>0?"+":"")+ (r.gd||0);
+    tr.innerHTML =
+      '<td class="rankcell num">'+r.rank+'</td>'
+     +'<td><div class="teamcell"><span class="zone '+zoneClass(r.rank)+'"></span>'
+        +'<span class="crest">'+badge(t)+'</span>'
+        +'<span style="min-width:0"><span class="tn">'+escapeHtml(teamName(t))+'</span><span class="tsub">'+escapeHtml(teamCountry(t))+'</span></span></div></td>'
+     +'<td class="mid num">'+(r.played||0)+'</td>'
+     +'<td class="mid num"><b>'+(r.points||0)+'</b></td>'
+     +'<td class="mid num">'+gd+'</td>';
+    tr.addEventListener("click", function(){ go("team", t.id); });
+    tb.appendChild(tr);
+  });
+}
+
+/* ================= render: player detail ================= */
+function renderPlayerDetail(name){
+  var l=L(); var r=resultByName(name); if(!r){ go("home"); return; }
+  $("pdName").textContent = r.player.name;
+  $("pdSub").textContent = (r.player.filled_in? (l.filledIn+": "+r.player.filled_in+" · ") : "") + l.code+" "+r.player.code;
+  var ordinal = r.pos+" "+l.of+" "+results.length;
+  $("pdTiles").innerHTML =
+     tile(l.tTotal, r.total, null, true)
+    +tile(l.tRankAmong, ordinal, null, false)
+    +tile(l.tBase, r.base, null, false)
+    +tile(l.tBonus, r.bonus?sgn(r.bonus):"0", null, false)
+    +tile(l.tTop8, r.top8, l.ptsWord+" "+(r.top8*BONUS_TOP8), false)
+    +tile(l.tTop24, r.top24, l.ptsWord+" "+(r.top24*BONUS_TOP24), false);
+  $("pdHint").textContent = l.pdHint;
+  var lines = r.lines.slice().sort(function(a,b){ return b.net-a.net || b.diff-a.diff; });
+  var tb=$("pdBody"); tb.innerHTML="";
+  lines.forEach(function(x){
+    var t=x.team; var tr=document.createElement("tr"); tr.className="clickable";
+    tr.innerHTML =
+      '<td class="mid num">'+x.pred+'</td>'
+     +'<td><div class="teamcell"><span class="crest">'+badge(t)+'</span><span class="tn">'+escapeHtml(teamName(t))+'</span></div></td>'
+     +'<td class="mid num">'+(x.played? x.act : l.notPlayed)+'</td>'
+     +'<td class="right num">'+(x.played? x.diff : l.notPlayed)+'</td>'
+     +'<td class="right num pts '+ptsClass(x.b)+'">'+(x.b?sgn(x.b):"0")+'</td>'
+     +'<td class="right num pts '+ptsClass(x.net)+'"><b>'+(x.played? x.net : l.notPlayed)+'</b></td>';
+    tr.addEventListener("click", function(){ go("team", t.id); });
+    tb.appendChild(tr);
+  });
+}
+
+/* ================= render: team detail ================= */
+function renderTeamDetail(id){
+  var l=L(); var t=byId[id]; if(!t){ go("home"); return; }
+  var st=teamStat(id); var act=actualRank[id];
+  $("tdCrest").innerHTML = badge(t);
+  $("tdName").textContent = teamName(t);
+  $("tdSub").textContent = teamCountry(t)+" · "+L().md+" "+(STAND.matchday||0)+"/8";
+  var rows = PRED.players.map(function(p){
+    var pred = p.ranking.indexOf(t.en)+1;
+    if(act==null) return {name:p.name, pred:pred, act:null, diff:0, b:0, net:0, played:false};
+    var diff=Math.abs(pred-act), b=0;
+    if(pred<=8 && act<=8) b+=BONUS_TOP8;
+    if(pred<=24 && act<=24) b+=BONUS_TOP24;
+    return {name:p.name, pred:pred, act:act, diff:diff, b:b, net:diff+b, played:true};
+  });
+  var played = rows.some(function(r){return r.played;});
+  var avg = played ? (rows.reduce(function(s,r){return s+r.net;},0)/rows.length) : null;
+  $("tdTiles").innerHTML =
+     tile(l.tdActRank, act!=null?act:l.notPlayed, null, true)
+    +tile(l.tdPlayed, st?(st.played||0):0, null, false)
+    +tile(l.tdPts, st?(st.points||0):0, null, false)
+    +tile(l.tdAvg, avg!=null? (Math.round(avg*10)/10) : l.notPlayed, null, false);
+  $("tdHint").textContent = l.tdHint;
+  rows.sort(function(a,b){ return b.net-a.net || b.diff-a.diff; });
+  var tb=$("tdBody"); tb.innerHTML="";
+  rows.forEach(function(x){
+    var tr=document.createElement("tr"); tr.className="clickable";
+    tr.innerHTML =
+      '<td><b>'+escapeHtml(x.name)+'</b></td>'
+     +'<td class="mid num">'+x.pred+'</td>'
+     +'<td class="mid num">'+(x.played? x.act : l.notPlayed)+'</td>'
+     +'<td class="right num">'+(x.played? x.diff : l.notPlayed)+'</td>'
+     +'<td class="right num pts '+ptsClass(x.b)+'">'+(x.b?sgn(x.b):"0")+'</td>'
+     +'<td class="right num pts '+ptsClass(x.net)+'"><b>'+(x.played? x.net : l.notPlayed)+'</b></td>';
+    tr.addEventListener("click", function(){ go("player", x.name); });
+    tb.appendChild(tr);
+  });
+}
+function tile(k,v,h,accent){
+  return '<div class="tile'+(accent?" accent":"")+'"><div class="k">'+escapeHtml(k)+'</div>'
+    +'<div class="v num">'+escapeHtml(String(v))+'</div>'
+    +(h?'<div class="h num">'+escapeHtml(String(h))+'</div>':'')+'</div>';
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+
+/* ================= routing ================= */
+function go(view, arg){
+  var hash = view==="home" ? "#/" : (view==="player" ? "#/player/"+encodeURIComponent(arg) : "#/team/"+encodeURIComponent(arg));
+  if(location.hash!==hash){ location.hash=hash; } else { route(); }
+}
+function route(){
+  var h=location.hash||"#/";
+  var m;
+  if((m=h.match(/^#\/player\/(.+)$/))){ showView("player"); renderPlayerDetail(decodeURIComponent(m[1])); }
+  else if((m=h.match(/^#\/team\/(.+)$/))){ showView("team"); renderTeamDetail(decodeURIComponent(m[1])); }
+  else { showView("home"); }
+  window.scrollTo(0,0);
+}
+function showView(v){
+  $("view-home").classList.toggle("hidden", v!=="home");
+  $("view-player").classList.toggle("hidden", v!=="player");
+  $("view-team").classList.toggle("hidden", v!=="team");
+}
+
+/* ================= i18n apply ================= */
+function applyLang(){
+  var l=L();
+  document.documentElement.lang=lang;
+  document.documentElement.dir = lang==="ar"?"rtl":"ltr";
+  $("markText").textContent = lang==="ar"?"ديوانية المسيليت":"Dowaniyat AlMusaileet";
+  $("markSub").textContent=l.markSub;
+  $("season").textContent=l.season; $("title").textContent=l.title; $("lede").textContent=l.lede;
+  $("mkUpdated").textContent=l.updated; $("mkMd").textContent=l.md; $("mkSrc").textContent=l.src;
+  $("refreshTxt").textContent=l.refresh;
+  $("hPlayers").textContent=l.hPlayers; $("hPlayersNote").textContent=l.hPlayersNote;
+  $("thPos").textContent=l.pos; $("thPlayer").textContent=l.player; $("thBase").textContent=l.base;
+  $("thBonus").textContent=l.bonus; $("thTotal").textContent=l.total;
+  $("hTeams").textContent=l.hTeams; $("hTeamsNote").textContent=l.hTeamsNote;
+  $("thRank").textContent=l.rank; $("thTeam").textContent=l.team; $("thP").textContent=l.P;
+  $("thPts").textContent=l.Pts; $("thGd").textContent=l.GD;
+  $("lg1").textContent=l.lg1; $("lg2").textContent=l.lg2; $("lg3").textContent=l.lg3;
+  Array.prototype.forEach.call(document.querySelectorAll(".backtxt"),function(e){e.textContent=l.back;});
+  $("pdTPred").textContent=l.pdTPred; $("pdTTeam").textContent=l.pdTTeam; $("pdTAct").textContent=l.pdTAct;
+  $("pdTDiff").textContent=l.pdTDiff; $("pdTBonus").textContent=l.pdTBonus; $("pdTNet").textContent=l.pdTNet;
+  $("tdTPlayer").textContent=l.tdTPlayer; $("tdTPred").textContent=l.tdTPred; $("tdTAct").textContent=l.tdTAct;
+  $("tdTDiff").textContent=l.tdTDiff; $("tdTBonus").textContent=l.tdTBonus; $("tdTNet").textContent=l.tdTNet;
+  $("langBtn").textContent=l.lang; $("foot").textContent=l.foot;
+  renderAll();
+}
+
+/* ================= load + refresh ================= */
+function renderAll(){
+  computeAll();
+  renderMeta(); renderPlayers(); renderTeams();
+  route();
+}
+function loadStandings(showState){
+  var btn=$("refreshBtn");
+  if(showState){ btn.disabled=true; $("refreshTxt").textContent=L().refreshing; }
+  return fetch("standings.json?t="+Date.now(),{cache:"no-store"})
+    .then(function(r){ if(!r.ok) throw new Error("http"); return r.json(); })
+    .then(function(j){ STAND=j; })
+    .catch(function(){ STAND=SEED_STANDINGS; })
+    .then(function(){
+      if(showState){ btn.disabled=false; $("refreshTxt").textContent=L().refresh; }
+      renderAll();
+    });
+}
+
+/* ================= wire up ================= */
+$("langBtn").addEventListener("click", function(){ lang = lang==="en"?"ar":"en"; applyLang(); });
+$("homeBtn").addEventListener("click", function(){ go("home"); });
+$("refreshBtn").addEventListener("click", function(){ loadStandings(true); });
+Array.prototype.forEach.call(document.querySelectorAll("[data-back]"),function(b){ b.addEventListener("click", function(){ go("home"); }); });
+window.addEventListener("hashchange", route);
+
+applyLang();          /* paints labels + first render with SEED */
+loadStandings(false); /* then try to pull live standings.json */
+</script>
+</body>
+</html>
