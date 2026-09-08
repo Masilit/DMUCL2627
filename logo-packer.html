@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo packer — Dowaniyat AlMusaileet</title>
+<style>
+:root{--night:#0F2033;--panel:#16304A;--line:rgba(240,231,214,.14);--sand:#F0E7D6;--dim:#A9B9C8;--brass:#E0B64A;--clay:#CE6E6E;}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--night);color:var(--sand);
+ font-family:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.5;}
+.wrap{max-width:820px;margin:0 auto;padding:28px 16px 80px;}
+h1{font-size:1.5rem;margin:0 0 6px;font-weight:800;}
+.lede{color:var(--dim);font-size:.92rem;margin:0 0 24px;max-width:62ch;}
+ol.steps{color:var(--dim);font-size:.9rem;padding-inline-start:20px;margin:0 0 24px;}
+ol.steps li{margin-bottom:6px;}
+ol.steps b{color:var(--sand);font-weight:600;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px;}
+.panel h2{font-size:1rem;margin:0 0 4px;font-weight:600;}
+.panel p{margin:0 0 12px;font-size:.84rem;color:var(--dim);}
+input[type=file]{font:inherit;font-size:.85rem;color:var(--dim);width:100%;}
+input[type=file]::file-selector-button{font:inherit;font-size:.85rem;font-weight:600;background:transparent;
+ border:1px solid var(--brass);color:var(--brass);padding:8px 14px;border-radius:99px;cursor:pointer;margin-inline-end:12px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px;}
+.slot{background:#12283E;border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center;font-size:.72rem;}
+.slot.filled{border-color:var(--brass);}
+.slot .thumb{height:44px;display:grid;place-items:center;margin-bottom:6px;}
+.slot .thumb img{max-height:44px;max-width:44px;}
+.slot .thumb .empty{color:#4E6C88;font-size:1.5rem;}
+.slot .nm{display:block;color:var(--sand);font-weight:600;margin-bottom:2px;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.slot .id{color:#5E7B95;font-family:ui-monospace,monospace;}
+.slot label{display:block;margin-top:6px;color:var(--brass);cursor:pointer;font-size:.7rem;}
+.slot input{display:none;}
+.bar{position:sticky;bottom:0;background:linear-gradient(to top,#0F2033 70%,rgba(15,32,51,0));
+ padding:16px 0 8px;margin-top:20px;}
+button.go{width:100%;font:inherit;font-size:1rem;font-weight:600;padding:15px;border-radius:10px;border:none;
+ background:var(--brass);color:#12243A;cursor:pointer;}
+button.go[disabled]{opacity:.35;cursor:not-allowed;}
+.status{font-size:.85rem;color:var(--dim);margin:10px 0 0;min-height:1.2em;}
+.status.err{color:var(--clay);}
+.status.ok{color:var(--brass);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Logo packer</h1>
+  <p class="lede">Puts real club logos into the prediction page and gives you back one single file you can share on WhatsApp. Everything happens on your own device — no images are uploaded anywhere.</p>
+
+  <ol class="steps">
+    <li>Save a logo image for each club on this device (PNG with a transparent background looks best).</li>
+    <li>Load the prediction page file below, then add the images.</li>
+    <li>Press <b>Build the file</b> and share the file it downloads.</li>
+  </ol>
+
+  <div class="panel">
+    <h2>1. The prediction page</h2>
+    <p>Pick <b>UCL-2026-27-Prediction-Dowaniyat-AlMusaileet.html</b>.</p>
+    <input type="file" id="htmlFile" accept=".html,text/html">
+  </div>
+
+  <div class="panel">
+    <h2>2. Add all logos at once</h2>
+    <p>Select many image files together. Each one is matched by its file name — name them <b>psg.png</b>, <b>real-madrid.png</b>, <b>arsenal.png</b> and so on. Anything that does not match, add by hand below.</p>
+    <input type="file" id="bulk" accept="image/*" multiple>
+  </div>
+
+  <div class="panel">
+    <h2>3. Check and fill the gaps</h2>
+    <p>Any club left blank keeps its colour badge.</p>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="bar">
+    <button class="go" id="build" disabled>Build the file</button>
+    <p class="status" id="status">Load the prediction page file to start.</p>
+  </div>
+</div>
+
+<script>
+var TEAMS=[
+["psg","Paris Saint-Germain"],["bay","Bayern München"],["rma","Real Madrid"],["liv","Liverpool"],
+["int","Inter Milan"],["mci","Manchester City"],["ars","Arsenal"],["bar","Barcelona"],
+["atm","Atlético de Madrid"],["bvb","Borussia Dortmund"],["rom","Roma"],["scp","Sporting CP"],
+["avl","Aston Villa"],["por","Porto"],["mun","Manchester United"],["bru","Club Brugge"],
+["bet","Real Betis"],["psv","PSV Eindhoven"],["fey","Feyenoord"],["lil","Lille"],
+["nap","Napoli"],["rbl","RB Leipzig"],["vil","Villarreal"],["shk","Shakhtar Donetsk"],
+["gal","Galatasaray"],["fen","Fenerbahçe"],["bod","Bodø/Glimt"],["vik","Viking"],
+["sla","Slavia Praha"],["vfb","VfB Stuttgart"],["aek","AEK Athens"],["lsk","LASK"],
+["com","Como"],["len","Lens"],["sab","Sabah"],["slo","Slovan Bratislava"]
+];
+var ALIASES={
+ psg:["psg","paris"], bay:["bayern","munich","munchen"], rma:["realmadrid","madridreal"],
+ liv:["liverpool"], int:["inter"], mci:["mancity","manchestercity"], ars:["arsenal"],
+ bar:["barcelona","barca"], atm:["atletico","atleti"], bvb:["dortmund","bvb","borussia"],
+ rom:["roma"], scp:["sporting"], avl:["astonvilla","villa"], por:["porto"],
+ mun:["manutd","manchesterunited","manunited"], bru:["brugge","bruges"], bet:["betis"],
+ psv:["psv","eindhoven"], fey:["feyenoord"], lil:["lille"], nap:["napoli"],
+ rbl:["leipzig"], vil:["villarreal"], shk:["shakhtar"], gal:["galatasaray"],
+ fen:["fenerbahce","fener"], bod:["bodo","glimt"], vik:["viking"], sla:["slavia"],
+ vfb:["stuttgart","vfb"], aek:["aek"], lsk:["lask"], com:["como"], len:["lens"],
+ sab:["sabah"], slo:["slovan","bratislava"]
+};
+var picked={}, htmlText=null;
+var grid=document.getElementById("grid"), status=document.getElementById("status"), buildBtn=document.getElementById("build");
+
+TEAMS.forEach(function(t){
+  var d=document.createElement("div");
+  d.className="slot"; d.id="s_"+t[0];
+  d.innerHTML='<div class="thumb"><span class="empty">·</span></div>'
+    +'<span class="nm">'+t[1]+'</span><span class="id">'+t[0]+'</span>'
+    +'<label>choose<input type="file" accept="image/*" data-id="'+t[0]+'"></label>';
+  grid.appendChild(d);
+});
+
+function shrink(file){
+  return new Promise(function(res,rej){
+    var fr=new FileReader();
+    fr.onload=function(){
+      var img=new Image();
+      img.onload=function(){
+        var S=96, c=document.createElement("canvas");
+        c.width=S; c.height=S;
+        var ctx=c.getContext("2d");
+        var r=Math.min(S/img.width,S/img.height);
+        var w=img.width*r, h=img.height*r;
+        ctx.drawImage(img,(S-w)/2,(S-h)/2,w,h);
+        res(c.toDataURL("image/png"));
+      };
+      img.onerror=function(){ rej(new Error("bad image")); };
+      img.src=fr.result;
+    };
+    fr.onerror=function(){ rej(new Error("read failed")); };
+    fr.readAsDataURL(file);
+  });
+}
+function setSlot(id,dataUrl){
+  picked[id]=dataUrl;
+  var s=document.getElementById("s_"+id);
+  s.classList.add("filled");
+  s.querySelector(".thumb").innerHTML='<img src="'+dataUrl+'" alt="">';
+  count();
+}
+function count(){
+  var n=Object.keys(picked).length;
+  if(htmlText) status.textContent=n+" of 36 logos added. The rest keep their colour badge.";
+}
+
+grid.addEventListener("change",function(e){
+  var inp=e.target;
+  if(!inp.files||!inp.files[0])return;
+  shrink(inp.files[0]).then(function(u){ setSlot(inp.dataset.id,u); })
+    .catch(function(){ status.className="status err"; status.textContent="That file could not be read as an image."; });
+});
+
+document.getElementById("bulk").addEventListener("change",function(e){
+  var files=Array.prototype.slice.call(e.target.files);
+  var jobs=files.map(function(f){
+    var base=f.name.toLowerCase().replace(/\.[^.]+$/,"").replace(/[^a-z0-9]/g,"");
+    var hit=null;
+    for(var id in ALIASES){
+      if(base===id){ hit=id; break; }
+      for(var i=0;i<ALIASES[id].length;i++){ if(base.indexOf(ALIASES[id][i])>-1){ hit=id; break; } }
+      if(hit)break;
+    }
+    if(!hit) return Promise.resolve(null);
+    return shrink(f).then(function(u){ setSlot(hit,u); return hit; }).catch(function(){ return null; });
+  });
+  Promise.all(jobs).then(function(r){
+    var ok=r.filter(Boolean).length;
+    status.className="status";
+    status.textContent="Matched "+ok+" of "+files.length+" files. "+Object.keys(picked).length+" of 36 logos added.";
+  });
+});
+
+document.getElementById("htmlFile").addEventListener("change",function(e){
+  var f=e.target.files[0];
+  if(!f)return;
+  var fr=new FileReader();
+  fr.onload=function(){
+    htmlText=fr.result;
+    if(htmlText.indexOf("/*LOGOS_START*/")<0||htmlText.indexOf("/*LOGOS_END*/")<0){
+      htmlText=null; buildBtn.disabled=true;
+      status.className="status err";
+      status.textContent="That file is not the prediction page. Look for UCL-2026-27-Prediction-Dowaniyat-AlMusaileet.html.";
+      return;
+    }
+    buildBtn.disabled=false;
+    status.className="status ok";
+    status.textContent="Prediction page loaded. Now add the logos.";
+  };
+  fr.readAsText(f);
+});
+
+buildBtn.addEventListener("click",function(){
+  if(!htmlText)return;
+  var lines=[];
+  for(var id in picked){ lines.push('  '+id+': "'+picked[id]+'"'); }
+  var blockBody = lines.length ? "var LOGOS = {\n"+lines.join(",\n")+"\n};" : "var LOGOS = {};";
+  var start=htmlText.indexOf("/*LOGOS_START*/");
+  var end=htmlText.indexOf("/*LOGOS_END*/");
+  var outHtml=htmlText.slice(0,start)+"/*LOGOS_START*/\n"+blockBody+"\n"+htmlText.slice(end);
+  var blob=new Blob([outHtml],{type:"text/html"});
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="UCL-2026-27-Prediction-Dowaniyat-AlMusaileet.html";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); },2000);
+  status.className="status ok";
+  status.textContent="File built with "+Object.keys(picked).length+" logos. Share the file that just downloaded.";
+});
+</script>
+</body>
+</html>
