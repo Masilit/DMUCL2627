@@ -3,11 +3,23 @@
   "competition": "UEFA Champions League",
   "phase": "League phase",
   "matchday": 2,
-  "last_updated": "2026-10-13T11:46:08+00:00",
+  "last_updated": "2026-10-13T19:15:49+00:00",
   "source": "football-data.org",
   "standings": [
     {
       "rank": 1,
+      "team": "Sporting CP",
+      "played": 2,
+      "won": 2,
+      "draw": 0,
+      "lost": 0,
+      "gf": 5,
+      "ga": 1,
+      "gd": 4,
+      "points": 6
+    },
+    {
+      "rank": 2,
       "team": "Paris Saint-Germain",
       "played": 1,
       "won": 1,
@@ -19,7 +31,7 @@
       "points": 3
     },
     {
-      "rank": 2,
+      "rank": 3,
       "team": "Bayern München",
       "played": 1,
       "won": 1,
@@ -31,7 +43,7 @@
       "points": 3
     },
     {
-      "rank": 3,
+      "rank": 4,
       "team": "Barcelona",
       "played": 1,
       "won": 1,
@@ -43,7 +55,7 @@
       "points": 3
     },
     {
-      "rank": 4,
+      "rank": 5,
       "team": "Manchester United",
       "played": 1,
       "won": 1,
@@ -55,7 +67,7 @@
       "points": 3
     },
     {
-      "rank": 5,
+      "rank": 6,
       "team": "Como",
       "played": 1,
       "won": 1,
@@ -67,20 +79,8 @@
       "points": 3
     },
     {
-      "rank": 6,
-      "team": "VfB Stuttgart",
-      "played": 1,
-      "won": 1,
-      "draw": 0,
-      "lost": 0,
-      "gf": 3,
-      "ga": 1,
-      "gd": 2,
-      "points": 3
-    },
-    {
       "rank": 7,
-      "team": "Sporting CP",
+      "team": "VfB Stuttgart",
       "played": 1,
       "won": 1,
       "draw": 0,
@@ -140,18 +140,6 @@
     },
     {
       "rank": 12,
-      "team": "Lens",
-      "played": 1,
-      "won": 1,
-      "draw": 0,
-      "lost": 0,
-      "gf": 3,
-      "ga": 2,
-      "gd": 1,
-      "points": 3
-    },
-    {
-      "rank": 13,
       "team": "Real Madrid",
       "played": 1,
       "won": 1,
@@ -163,7 +151,7 @@
       "points": 3
     },
     {
-      "rank": 14,
+      "rank": 13,
       "team": "Liverpool",
       "played": 1,
       "won": 1,
@@ -175,7 +163,7 @@
       "points": 3
     },
     {
-      "rank": 15,
+      "rank": 14,
       "team": "AEK Athens",
       "played": 1,
       "won": 1,
@@ -187,7 +175,7 @@
       "points": 3
     },
     {
-      "rank": 16,
+      "rank": 15,
       "team": "Arsenal",
       "played": 1,
       "won": 1,
@@ -199,7 +187,31 @@
       "points": 3
     },
     {
+      "rank": 16,
+      "team": "Lens",
+      "played": 2,
+      "won": 1,
+      "draw": 0,
+      "lost": 1,
+      "gf": 3,
+      "ga": 4,
+      "gd": -1,
+      "points": 3
+    },
+    {
       "rank": 17,
+      "team": "Sabah",
+      "played": 2,
+      "won": 1,
+      "draw": 0,
+      "lost": 1,
+      "gf": 2,
+      "ga": 4,
+      "gd": -2,
+      "points": 3
+    },
+    {
+      "rank": 18,
       "team": "Fenerbahçe",
       "played": 1,
       "won": 0,
@@ -211,7 +223,7 @@
       "points": 1
     },
     {
-      "rank": 18,
+      "rank": 19,
       "team": "Roma",
       "played": 1,
       "won": 0,
@@ -223,7 +235,7 @@
       "points": 1
     },
     {
-      "rank": 19,
+      "rank": 20,
       "team": "PSV Eindhoven",
       "played": 1,
       "won": 0,
@@ -235,7 +247,7 @@
       "points": 1
     },
     {
-      "rank": 20,
+      "rank": 21,
       "team": "Shakhtar Donetsk",
       "played": 1,
       "won": 0,
@@ -247,7 +259,7 @@
       "points": 1
     },
     {
-      "rank": 21,
+      "rank": 22,
       "team": "Club Brugge",
       "played": 1,
       "won": 0,
@@ -259,7 +271,7 @@
       "points": 0
     },
     {
-      "rank": 22,
+      "rank": 23,
       "team": "Villarreal",
       "played": 1,
       "won": 0,
@@ -271,20 +283,8 @@
       "points": 0
     },
     {
-      "rank": 23,
-      "team": "Lille",
-      "played": 1,
-      "won": 0,
-      "draw": 0,
-      "lost": 1,
-      "gf": 2,
-      "ga": 3,
-      "gd": -1,
-      "points": 0
-    },
-    {
       "rank": 24,
-      "team": "Slavia Praha",
+      "team": "Lille",
       "played": 1,
       "won": 0,
       "draw": 0,
@@ -380,6 +380,18 @@
     },
     {
       "rank": 32,
+      "team": "Slavia Praha",
+      "played": 2,
+      "won": 0,
+      "draw": 0,
+      "lost": 2,
+      "gf": 2,
+      "ga": 5,
+      "gd": -3,
+      "points": 0
+    },
+    {
+      "rank": 33,
       "team": "RB Leipzig",
       "played": 1,
       "won": 0,
@@ -391,7 +403,7 @@
       "points": 0
     },
     {
-      "rank": 33,
+      "rank": 34,
       "team": "Feyenoord",
       "played": 1,
       "won": 0,
@@ -399,18 +411,6 @@
       "lost": 1,
       "gf": 1,
       "ga": 5,
-      "gd": -4,
-      "points": 0
-    },
-    {
-      "rank": 34,
-      "team": "Sabah",
-      "played": 1,
-      "won": 0,
-      "draw": 0,
-      "lost": 1,
-      "gf": 0,
-      "ga": 4,
       "gd": -4,
       "points": 0
     },
