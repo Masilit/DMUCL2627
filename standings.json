@@ -3,7 +3,7 @@
   "competition": "UEFA Champions League",
   "phase": "League phase",
   "matchday": 3,
-  "last_updated": "2026-10-20T15:04:08+00:00",
+  "last_updated": "2026-10-20T19:15:04+00:00",
   "source": "football-data.org",
   "standings": [
     {
@@ -116,6 +116,18 @@
     },
     {
       "rank": 10,
+      "team": "Borussia Dortmund",
+      "played": 3,
+      "won": 2,
+      "draw": 0,
+      "lost": 1,
+      "gf": 5,
+      "ga": 4,
+      "gd": 1,
+      "points": 6
+    },
+    {
+      "rank": 11,
       "team": "Bayern München",
       "played": 2,
       "won": 1,
@@ -127,7 +139,7 @@
       "points": 4
     },
     {
-      "rank": 11,
+      "rank": 12,
       "team": "Shakhtar Donetsk",
       "played": 2,
       "won": 1,
@@ -139,7 +151,7 @@
       "points": 4
     },
     {
-      "rank": 12,
+      "rank": 13,
       "team": "Como",
       "played": 2,
       "won": 1,
@@ -151,7 +163,7 @@
       "points": 3
     },
     {
-      "rank": 13,
+      "rank": 14,
       "team": "Manchester United",
       "played": 2,
       "won": 1,
@@ -163,7 +175,7 @@
       "points": 3
     },
     {
-      "rank": 14,
+      "rank": 15,
       "team": "Villarreal",
       "played": 2,
       "won": 1,
@@ -175,7 +187,7 @@
       "points": 3
     },
     {
-      "rank": 15,
+      "rank": 16,
       "team": "Atlético de Madrid",
       "played": 2,
       "won": 1,
@@ -187,7 +199,7 @@
       "points": 3
     },
     {
-      "rank": 16,
+      "rank": 17,
       "team": "Club Brugge",
       "played": 2,
       "won": 1,
@@ -199,7 +211,7 @@
       "points": 3
     },
     {
-      "rank": 17,
+      "rank": 18,
       "team": "Manchester City",
       "played": 2,
       "won": 1,
@@ -207,18 +219,6 @@
       "lost": 1,
       "gf": 4,
       "ga": 4,
-      "gd": 0,
-      "points": 3
-    },
-    {
-      "rank": 18,
-      "team": "Borussia Dortmund",
-      "played": 2,
-      "won": 1,
-      "draw": 0,
-      "lost": 1,
-      "gf": 3,
-      "ga": 3,
       "gd": 0,
       "points": 3
     },
@@ -248,18 +248,6 @@
     },
     {
       "rank": 21,
-      "team": "Sabah",
-      "played": 2,
-      "won": 1,
-      "draw": 0,
-      "lost": 1,
-      "gf": 2,
-      "ga": 4,
-      "gd": -2,
-      "points": 3
-    },
-    {
-      "rank": 22,
       "team": "RB Leipzig",
       "played": 2,
       "won": 1,
@@ -271,7 +259,7 @@
       "points": 3
     },
     {
-      "rank": 23,
+      "rank": 22,
       "team": "Feyenoord",
       "played": 2,
       "won": 1,
@@ -279,6 +267,18 @@
       "lost": 1,
       "gf": 4,
       "ga": 7,
+      "gd": -3,
+      "points": 3
+    },
+    {
+      "rank": 23,
+      "team": "Sabah",
+      "played": 3,
+      "won": 1,
+      "draw": 0,
+      "lost": 2,
+      "gf": 3,
+      "ga": 6,
       "gd": -3,
       "points": 3
     },
@@ -296,6 +296,18 @@
     },
     {
       "rank": 25,
+      "team": "Fenerbahçe",
+      "played": 3,
+      "won": 0,
+      "draw": 2,
+      "lost": 1,
+      "gf": 3,
+      "ga": 9,
+      "gd": -6,
+      "points": 2
+    },
+    {
+      "rank": 26,
       "team": "Roma",
       "played": 2,
       "won": 0,
@@ -307,7 +319,7 @@
       "points": 1
     },
     {
-      "rank": 26,
+      "rank": 27,
       "team": "PSV Eindhoven",
       "played": 2,
       "won": 0,
@@ -319,7 +331,7 @@
       "points": 1
     },
     {
-      "rank": 27,
+      "rank": 28,
       "team": "Viking",
       "played": 2,
       "won": 0,
@@ -331,19 +343,19 @@
       "points": 1
     },
     {
-      "rank": 28,
-      "team": "Fenerbahçe",
-      "played": 2,
+      "rank": 29,
+      "team": "Slavia Praha",
+      "played": 3,
       "won": 0,
       "draw": 1,
-      "lost": 1,
-      "gf": 1,
+      "lost": 2,
+      "gf": 4,
       "ga": 7,
-      "gd": -6,
+      "gd": -3,
       "points": 1
     },
     {
-      "rank": 29,
+      "rank": 30,
       "team": "Inter Milan",
       "played": 2,
       "won": 0,
@@ -355,20 +367,8 @@
       "points": 0
     },
     {
-      "rank": 30,
-      "team": "Porto",
-      "played": 2,
-      "won": 0,
-      "draw": 0,
-      "lost": 2,
-      "gf": 2,
-      "ga": 5,
-      "gd": -3,
-      "points": 0
-    },
-    {
       "rank": 31,
-      "team": "Slavia Praha",
+      "team": "Porto",
       "played": 2,
       "won": 0,
       "draw": 0,
